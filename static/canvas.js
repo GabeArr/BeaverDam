@@ -180,17 +180,16 @@ class Canvas {
             var my = mouse.y;
             var boxes = myState.boxes;
             var border = false;
-            // var box = null;
 
             /* Checks if mouse is hovering over a border. */
             for (var i = boxes.length - 1; i >= 0; i--) {
                 border = boxes[i].withinBorder(mx, my);
-                if (border && !myState.move) {
-                    boxes[i].doubleArrow(mx, my);
+                if (border && !myState.move && boxes[i].contains(mx, my)) {
+                    var corner = boxes[i].whichCorner(mx, my);
+                    boxes[i].doubleArrow(border, corner);
                     break;
                 }
             }
-
 
             if (!myState.enlargeDirection && !myState.dragging && !border) {
                 document.body.style.cursor = 'default';

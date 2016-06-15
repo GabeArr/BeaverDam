@@ -61,7 +61,6 @@ class Box {
         }
     }
 
-
     /**
      * Checks if my is close to the top border of the box.
      * @param my The y coordinate.
@@ -167,28 +166,43 @@ class Box {
     }
 
     /**
+     * Determines if the mouse is on a corner. If not, returns false, else 
+     * returns which of the four corners the mouse is on.
+     * @param mx the x-coordinate of the mouse
+     * @param my the y-coordinate of the mouse.
+     */
+     whichCorner(mx, my) {
+        var minX = Math.min(this.x, this.x + this.w);
+        var maxX = Math.max(this.x, this.x + this.w);
+        var minY = Math.min(this.y, this.y + this.h);
+        var maxY = Math.max(this.y, this.y + this.h);
+        if ((minY + 2 >= my) && (minY - 2 <= my) && (maxX + 2 >= mx) && (maxX - 2 <= mx)) {
+            return Box.corner.BOTTOMRIGHT;
+        }  else if ((maxY + 2 >= my) && (maxY - 2 <= my) && (minX + 2 >= mx) && (minX - 2 <= mx)) {
+            return Box.corner.TOPLEFT;
+        } else if ((minY + 2 >= my) && (minY - 2 <= my) && (minX + 2 >= mx) && (minX - 2 <= mx)) {
+            return Box.corner.BOTTOMLEFT;
+        } else if ((maxY + 2 >= my) && (maxY - 2 <= my) && (maxX + 2 >= mx) && (maxX - 2 <= mx)) {
+            return Box.corner.TOPRIGHT;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Changes the cursor to one of the four bidirectional resize cursors, depending on which 
      * side or corner of a box the mouse is on.
      * @param mx the x-coordinate of the mouse
      * @param my the y-coordinate of the mouse.
      */
-    doubleArrow(mx, my) {
-        var x = this.x; var y = this.y; var w = this.w; var h = this.h;
-        var minX = Math.min(x, x + w);
-        var maxX = Math.max(x, x + w);
-        var minY = Math.min(y, y + h);
-        var maxY = Math.max(y, y + h); 
-        if (((minY + 2 >= my) && (minY - 2 <= my) && (maxX + 2 >= mx) && (maxX - 2 <= mx)) 
-            || ((maxY + 2 >= my) && (maxY - 2 <= my) && (minX + 2 >= mx) && (minX - 2 <= mx))) {
+    doubleArrow(border, corner) {
+        if (corner === Box.corner.BOTTOMRIGHT || corner === Box.corner.TOPLEFT) {
             document.body.style.cursor = 'nesw-resize';
-        } else if (((minY + 2 >= my) && (minY - 2 <= my) && (minX + 2 >= mx) && (minX - 2 <= mx)) 
-            || ((maxY + 2 >= my) && (maxY - 2 <= my) && (maxX + 2 >= mx) && (maxX - 2 <= mx))) {
+        } else if (corner === Box.corner.BOTTOMLEFT || corner === Box.corner.TOPRIGHT) {
             document.body.style.cursor = 'nwse-resize';
-        } else if (this.withinTop(my) && ((mx > x && mx < x + w) || (mx > x + w && mx < x))
-            || this.withinBottom(my) && ((mx > x && mx < x + w) || (mx > x + w && mx < x))){
+        } else if (border === Box.border.TOP || border === Box.border.BOTTOM){
             document.body.style.cursor = 'ns-resize';
-        } else if (this.withinLeft(mx) && ((my > y && my < y + h) || (my > y + h && my < y))
-            || this.withinRight(mx) && ((my > y && my < y + h) || (my > y + h && my < y))) {
+        } else if (border === Box.border.LEFT || border === Box.border.RIGHT) {
             document.body.style.cursor = 'ew-resize';
         }
     }
@@ -206,4 +220,16 @@ Box.border = {
     TOPRIGHT: 6,
     BOTTOMLEFT: 7,
     BOTTOMRIGHT: 8
+}
+
+/**
+ * The values corresponding with each corner. This differs from Box.border in that these 
+ * values are based on what is considered topleft, topright, bottomleft, and bottomright
+ * regardless of how a user drags a box.
+ */
+Box.corner = {
+    TOPLEFT: 1,
+    TOPRIGHT: 2,
+    BOTTOMLEFT: 3,
+    BOTTOMRIGHT: 4
 }
