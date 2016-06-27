@@ -13,10 +13,15 @@ def root():
 
 @app.route('/video/<video_name>')
 def video(video_name):
-	video_data = {
-		'name': video_name,
-	}
-	return render_template('video.html', video_data=video_data)
+    if os.path.exists(os.path.join('static', 'videos', video_name)):
+        video_location = 'static'
+    else:
+        video_location = 's3'
+    video_data = {
+        'name': video_name,
+        'location': video_location,
+    }
+    return render_template('video.html', video_data=video_data)
 
 @app.route('/scene/<scene_name>', methods=['GET'])
 def read_scene(scene_name):
@@ -32,4 +37,4 @@ def write_scene(scene_name):
     return 'successfully saved to {}.json'.format(scene_name)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
