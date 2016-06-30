@@ -120,6 +120,16 @@ class Canvas {
             var boxes = myState.boxes;
             var l = boxes.length;
 
+            var playButton = document.getElementById("play-button");
+            if (playButton.className == 'glyphicon glyphicon-pause') {
+                return;
+            }
+
+            // var playButton = document.getElementById("play-button");
+            // if (playBotton.className == 'glyphicon glyphicon-pause') {
+            //     return;
+            // }
+
             /* Checks if within border. If not, checks if it is within the box. If it's in the
              border, enlargingDirection is set to the border that was clicked. If it's in the
              box or its border, we set the selection to that box and record where it was
@@ -193,6 +203,11 @@ class Canvas {
             var my = mouse.y;
             var boxes = myState.boxes;
             var border = false;
+
+            var playButton = document.getElementById("play-button");
+            if (playButton.className == 'glyphicon glyphicon-pause') {
+                return;
+            }
 
             /* Checks if mouse is hovering over a border. */
             for (var i = boxes.length - 1; i >= 0; i--) {
